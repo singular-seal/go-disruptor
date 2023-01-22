@@ -36,6 +36,19 @@ func (this *DefaultWriter) Reserve(count int64) int64 {
 	return this.previous
 }
 
+func (this *DefaultWriter) TryReserve(count int64) (int64, bool) {
+	if count <= 0 {
+		panic(ErrMinimumReservationSize)
+	}
+
+	newPrev := this.previous + count
+	if newPrev-this.capacity > this.gate {
+		return 0, false
+	}
+	this.previous = newPrev
+	return this.previous, true
+}
+
 func (this *DefaultWriter) Commit(_, upper int64) { this.written.Store(upper) }
 
 const SpinMask = 1024*16 - 1 // arbitrary; we'll want to experiment with different values

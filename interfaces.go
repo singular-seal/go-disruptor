@@ -17,6 +17,7 @@ type WaitStrategy interface {
 
 type Writer interface {
 	Reserve(count int64) int64
+	TryReserve(count int64) (int64, bool)
 	Commit(lower, upper int64)
 }
 

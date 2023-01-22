@@ -10,7 +10,7 @@ import (
 
 func BenchmarkWriterReserve(b *testing.B) {
 	read, written := disruptor.NewCursor(), disruptor.NewCursor()
-	writer := disruptor.NewWriter(written, read, 1024, 0)
+	writer := disruptor.NewWriter(written, read, 1024)
 	iterations := int64(b.N)
 	b.ReportAllocs()
 	b.ResetTimer()
@@ -22,7 +22,7 @@ func BenchmarkWriterReserve(b *testing.B) {
 }
 func BenchmarkWriterNextWrapPoint(b *testing.B) {
 	read, written := disruptor.NewCursor(), disruptor.NewCursor()
-	writer := disruptor.NewWriter(written, read, 1024, 0)
+	writer := disruptor.NewWriter(written, read, 1024)
 	iterations := int64(b.N)
 	b.ReportAllocs()
 	b.ResetTimer()
@@ -33,7 +33,7 @@ func BenchmarkWriterNextWrapPoint(b *testing.B) {
 	}
 }
 func BenchmarkWriterCommit(b *testing.B) {
-	writer := disruptor.NewWriter(disruptor.NewCursor(), nil, 1024, 0)
+	writer := disruptor.NewWriter(disruptor.NewCursor(), nil, 1024)
 	iterations := int64(b.N)
 	b.ReportAllocs()
 	b.ResetTimer()

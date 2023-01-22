@@ -1,15 +1,11 @@
 package disruptor
 
-import (
-	"errors"
-	"time"
-)
+import "errors"
 
 type Wireup struct {
-	waiter             WaitStrategy
-	capacity           int64
-	writeBlockParkTime time.Duration
-	consumerGroups     [][]Consumer
+	waiter         WaitStrategy
+	capacity       int64
+	consumerGroups [][]Consumer
 }
 type Option func(*Wireup)
 
@@ -71,7 +67,7 @@ func (this *Wireup) validate() error {
 func (this *Wireup) Build() (Writer, Reader) {
 	var writerSequence = NewCursor()
 	readers, readBarrier := this.buildReaders(writerSequence)
-	return NewWriter(writerSequence, readBarrier, this.capacity, this.writeBlockParkTime), compositeReader(readers)
+	return NewWriter(writerSequence, readBarrier, this.capacity), compositeReader(readers)
 }
 func (this *Wireup) buildReaders(writerSequence *Cursor) (readers []Reader, upstream Barrier) {
 	upstream = writerSequence
@@ -95,9 +91,6 @@ func WithWaitStrategy(value WaitStrategy) Option { return func(this *Wireup) { t
 func WithCapacity(value int64) Option            { return func(this *Wireup) { this.capacity = value } }
 func WithConsumerGroup(value ...Consumer) Option {
 	return func(this *Wireup) { this.consumerGroups = append(this.consumerGroups, value) }
-}
-func WithWriteBlockParkTime(value time.Duration) Option {
-	return func(this *Wireup) { this.writeBlockParkTime = value }
 }
 
 var (

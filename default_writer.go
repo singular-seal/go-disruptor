@@ -42,6 +42,7 @@ func (this *DefaultWriter) TryReserve(count int64) (int64, bool) {
 	}
 
 	newPrev := this.previous + count
+	this.gate = this.upstream.Load()
 	if newPrev-this.capacity > this.gate {
 		return 0, false
 	}
